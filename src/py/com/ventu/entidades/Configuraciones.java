@@ -47,6 +47,9 @@ public class Configuraciones implements Serializable {
     @Column(name = "telefono")
     private String telefono;
     
+    @Column(name = "imprimir_ticket")
+    private Boolean imprimirTicket;
+    
     @Column(name = "ruta_informes")
     private String rutaInformes;
     
@@ -62,6 +65,7 @@ public class Configuraciones implements Serializable {
     private Caja caja;
 
     public Configuraciones() {
+        this.setImprimirTicket(false);
     }
 
     public Configuraciones(Integer id) {
@@ -114,6 +118,14 @@ public class Configuraciones implements Serializable {
 
     public void setRutaInformes(String rutaInformes) {
         this.rutaInformes = rutaInformes;
+    }
+
+    public Boolean isImprimirTicket() {
+        return imprimirTicket;
+    }
+
+    public void setImprimirTicket(Boolean imprimirTicket) {
+        this.imprimirTicket = imprimirTicket;
     }
     
     public Date getFechaMod() {
