@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlDeCaja" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e00d1488-e3b5-426b-bda1-b7143e535367">
+	<property name="ireport.zoom" value="1.000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaDesde" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaHasta" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="usuario" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     0  as bloque,
+     conf.comercio as conf_comercio,
+     conf.caja as conf_caja,
+     conf.sucursal as conf_suc,
+     caja.nombre as caja_nombre,
+     suc.nombre as suc_nombre,
+     0 as fv_condicionVta,
+     null as fv_fecha,
+     0 as fv_total,
+     0  as fv_estado
+FROM
+     caja caja
+     INNER JOIN configuraciones conf ON caja.id = conf.caja
+     INNER JOIN sucursales suc ON caja.sucursales = suc.id
+		AND suc.id = conf.sucursal
+
+union all
+
+SELECT
+     1  as bloque,
+     conf.comercio as conf_comercio,
+     conf.caja as conf_caja,
+     conf.sucursal as conf_suc,
+     caja.nombre as caja_nombre,
+     suc.nombre as suc_nombre,
+     fv.condicion_venta as fv_condicionVta,
+     fv.fecha as fv_fecha,
+     fv.total as fv_total,
+     fv.estado  as fv_estado
+FROM
+     caja caja
+     INNER JOIN configuraciones conf ON caja.id = conf.caja
+     INNER JOIN sucursales suc ON caja.sucursales = suc.id
+		AND suc.id = conf.sucursal
+     INNER JOIN factura_venta fv ON suc.id = fv.sucursal
+		AND fv.caja = conf.caja
+		AND fv.sucursal = conf.sucursal
+WHERE
+     fv.fecha::timestamp::date >= $P{fechaDesde}
+     and fv.fecha::timestamp::date <= $P{fechaHasta}
+     and fv.estado <> 3
+
+
+union all
+
+
+SELECT
+     2 as bloque,
+     conf.comercio as conf_comercio,
+     conf.caja as conf_caja,
+     conf.sucursal as conf_suc,
+     caja.nombre as caja_nombre,
+     suc.nombre as suc_nombre,
+     2 as fv_condicionVta,
+     cob.fecha as fv_fecha,
+     cob.importe_total as fv_total,
+     1  as fv_estado
+FROM
+     caja caja
+     INNER JOIN configuraciones conf ON caja.id = conf.caja
+     INNER JOIN sucursales suc ON caja.sucursales = suc.id
+		AND suc.id = conf.sucursal
+     LEFT OUTER JOIN cobranza cob on conf.caja = cob.caja and conf.sucursal = cob.sucursal
+WHERE
+     cob.fecha::timestamp::date >= $P{fechaDesde}
+     and cob.fecha::timestamp::date <= $P{fechaHasta}]]>
+	</queryString>
+	<field name="bloque" class="java.lang.Integer"/>
+	<field name="conf_comercio" class="java.lang.String"/>
+	<field name="conf_caja" class="java.lang.Integer"/>
+	<field name="conf_suc" class="java.lang.Integer"/>
+	<field name="caja_nombre" class="java.lang.String"/>
+	<field name="suc_nombre" class="java.lang.String"/>
+	<field name="fv_condicionvta" class="java.lang.Integer"/>
+	<field name="fv_fecha" class="java.sql.Timestamp"/>
+	<field name="fv_total" class="java.lang.Double"/>
+	<field name="fv_estado" class="java.lang.Integer"/>
+	<variable name="totalContado" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{bloque} == 1 ? ($F{fv_condicionvta} == 1 ? $F{fv_total} : 0) : 0]]></variableExpression>
+	</variable>
+	<variable name="totalCredito" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{bloque} == 1 ? ($F{fv_condicionvta} == 2 ? $F{fv_total} : 0) : 0]]></variableExpression>
+	</variable>
+	<variable name="totalTarjeta" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{bloque} == 1 ? ($F{fv_condicionvta} == 3 ? $F{fv_total} : 0) : 0]]></variableExpression>
+	</variable>
+	<variable name="total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{bloque} == 1 ? $F{fv_total} : 0]]></variableExpression>
+	</variable>
+	<variable name="totalCobranza" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{bloque} == 2 ? $F{fv_total} : 0]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="totalEnCaja" class="java.lang.Double" resetType="Page">
+		<variableExpression><![CDATA[$V{totalContado} + $V{totalCobranza}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="124" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="446" y="15" width="110" height="15" uuid="692c8ac4-7a54-42ff-a542-66d24fe4d3e5"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm:ss">
+				<reportElement x="446" y="30" width="110" height="15" uuid="0bd75787-8546-4d01-bb69-510e44db4611"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="163" y="25" width="224" height="30" uuid="a676b603-242b-4f5c-8dfa-69a689918d4b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Informe de Caja]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="4" width="290" height="20" uuid="e9996c2b-9786-471b-8a48-878902cb5b3b"/>
+				<textFieldExpression><![CDATA[$F{conf_comercio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="72" width="61" height="15" uuid="625ad7cf-ffac-43a4-95f5-8523d2c7c361"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="90" width="32" height="15" uuid="03a3054d-f60e-4a49-ba58-a1cb0001856a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Caja:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="49" y="90" width="262" height="15" uuid="a46b91de-18d2-4da6-8bf8-bd5774dfa9a4"/>
+				<textFieldExpression><![CDATA[$F{conf_caja} + " " + $F{caja_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="78" y="72" width="233" height="15" uuid="a3f3d19a-b771-424b-b787-dafe8f87bb44"/>
+				<textFieldExpression><![CDATA[$F{conf_suc} + " " + $F{suc_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="387" y="72" width="41" height="15" uuid="47ee9bb4-32a6-46f6-a5ca-ccbbaf47aef8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="90" width="41" height="15" uuid="689d9270-cca6-4859-925d-af57bfd3f12f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hasta:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement x="428" y="72" width="127" height="15" uuid="aa97fe6c-d8b4-4bb6-a8fb-50972c5bea63"/>
+				<textFieldExpression><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement x="428" y="90" width="127" height="15" uuid="5bf09bcc-5e03-4d50-9b99-d13ea2b757fa"/>
+				<textFieldExpression><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="4" y="119" width="549" height="1" uuid="7b96cd28-0089-4759-b492-c573cb10b9b6"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="281" splitType="Stretch">
+			<rectangle>
+				<reportElement x="236" y="154" width="100" height="20" uuid="86a6fe60-024a-4d09-8b96-36da9c71aa2b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="236" y="174" width="100" height="20" uuid="6e11e98c-93cd-403f-a6f2-5edc20095d78"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="236" y="194" width="100" height="20" uuid="234ad145-56b0-4407-bf75-132675fcb86f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="236" y="214" width="100" height="20" uuid="853fe7c6-ce1f-4196-bdb9-d7e1d1609036"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="136" y="194" width="100" height="20" uuid="08bf6558-13d5-48bb-b30b-710e7315dc3b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="136" y="174" width="100" height="20" uuid="df59fc62-4d21-4883-8791-c3b2109c677c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="136" y="214" width="100" height="20" uuid="f7bb7d9f-48d2-4b93-b2e9-6e4761f4dc7b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="136" y="154" width="100" height="20" uuid="c1e2c192-4c69-49ec-9782-e6d1213c347a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="17" y="10" width="134" height="15" uuid="c8f164d9-f835-46cc-be1b-17c2508e6a9f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Por tipo de venta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="137" y="33" width="57" height="20" uuid="25de9c52-47e0-4b95-a1f8-8fbdc1656784"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Contado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="137" y="53" width="57" height="20" uuid="2e502ad2-1f0d-4f54-a372-06133d479b28"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Crédito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="137" y="73" width="57" height="20" uuid="56b370a3-9b6f-4108-ae29-bb9c106ad67c"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Tarjeta]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement x="211" y="33" width="100" height="20" uuid="7c40c971-2efd-4491-9c71-cefd3c616516"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totalContado}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement x="211" y="53" width="100" height="20" uuid="914f7005-1d0f-4695-b9c9-fd4a61f8136f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totalCredito}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement x="211" y="73" width="100" height="20" uuid="26c3bae6-64ad-4150-b13b-5769cdde7bf2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totalTarjeta}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="4" y="101" width="548" height="1" uuid="91635b2b-1a57-46c2-b0ee-c34fd627d7e7"/>
+			</line>
+			<line>
+				<reportElement x="4" y="130" width="548" height="1" uuid="6d4fc5fc-0309-482b-aa87-eb02d362eb54"/>
+			</line>
+			<staticText>
+				<reportElement x="136" y="106" width="55" height="20" uuid="4227eeca-019e-4210-b29c-f6e93a43d130"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement x="211" y="106" width="100" height="20" uuid="26b581de-1fc5-4d65-84f1-ad5b89bf2a45"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="261" width="548" height="1" uuid="d9173e86-ded9-461c-9ba7-611f515f6eb6"/>
+			</line>
+			<staticText>
+				<reportElement x="140" y="174" width="87" height="20" uuid="ce01a231-dd32-47e2-a530-07006da8fc5e"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Cobranzas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="194" width="87" height="20" uuid="112aac17-523a-40c7-8fc9-49abe6006042"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Total en Caja]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="214" width="87" height="20" uuid="50edc579-7658-4504-91b8-04b0fb538f60"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Créditos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="154" width="87" height="20" uuid="14e669c6-2984-4da2-b685-4995d30f84b1"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Total en Efectivo]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement x="236" y="154" width="90" height="20" uuid="817b510c-37f1-4760-b18f-b3914f276fa0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totalContado}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement x="236" y="214" width="90" height="20" uuid="1bf9dde4-4921-40f0-bbb1-4e66d7f74243"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totalCredito}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement x="236" y="174" width="90" height="20" uuid="92dbbc4c-54a2-45f5-9079-f4c1edabe206"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totalCobranza}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement x="236" y="194" width="90" height="20" uuid="17522f5c-ba89-457b-a75c-9184937c2ed1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totalEnCaja}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<pageFooter>
+		<band height="26">
+			<textField>
+				<reportElement x="5" y="3" width="100" height="20" uuid="9a7aa6fa-82d9-4381-9bdd-ccb8d4af38cd"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="7" width="80" height="15" uuid="4a4212c5-4534-4e8f-9a1d-063b996da0dd"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="514" y="7" width="30" height="15" uuid="e1821c24-4c77-4e5c-bf60-c04140357c2b"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

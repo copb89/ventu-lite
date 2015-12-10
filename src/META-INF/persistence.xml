@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence      http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="DATAPU" transaction-type="RESOURCE_LOCAL">
+    <class>py.com.ventu.entidades.Caja</class>
+    <class>py.com.ventu.entidades.Cliente</class>
+    <class>py.com.ventu.entidades.Configuraciones</class>
+    <class>py.com.ventu.entidades.Producto</class>
+    <class>py.com.ventu.entidades.Proveedor</class>
+    <class>py.com.ventu.entidades.TipoProducto</class>
+    <class>py.com.ventu.entidades.Usuario</class>
+    <class>py.com.ventu.entidades.Vendedor</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ventu"/>
+      <property name="javax.persistence.jdbc.password" value="postgres"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
+    </properties>
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+  </persistence-unit>
+</persistence>

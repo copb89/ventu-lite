@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EstadoCuentasClientes2" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b85a4199-56b1-48d6-8b9a-96de8bb5dd53">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FechaDesde" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaHasta" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     fv."fecha" AS factura_venta_fecha,
+     sa."saldo" AS sa_pendientes_saldo,
+     cobranza_det."importe" AS cobranza_det_importe,
+     fv."sucursal" AS cobranza_sucursal,
+     sucursales."nombre" AS sucursal,
+     cl."cliente" AS cliente,
+     grupo_clientes."descripcion" AS grupo,
+     cobranza."importe_total" AS saldo,
+     fv."ticket" AS ticket,
+     fv."condicion_venta" AS condicion_v,
+     fv."total" AS total_fv
+FROM
+     factura_venta fv  inner join
+     clientes cl on cl.id = fv.cliente
+	inner join grupo_clientes grupo_clientes
+	on grupo_clientes.id = cl.grupo_cliente
+	inner join sucursales sucursales
+	on sucursales.id= fv.sucursal
+	left outer join sa_pendientes sa on sa.ref_operacion = fv.nro_trans
+	left outer join
+     cobranza_det cobranza_det on cobranza_det.ticket=sa.ref_ticket
+      left outer join cobranza cobranza
+      on cobranza.nro_recibo= cobranza_det.nro_recibo where fv."fecha"
+BETWEEN $P{FechaDesde} AND $P{FechaHasta} order by ticket, factura_venta_fecha]]>
+	</queryString>
+	<field name="factura_venta_fecha" class="java.sql.Timestamp"/>
+	<field name="sa_pendientes_saldo" class="java.lang.Double"/>
+	<field name="cobranza_det_importe" class="java.lang.Double"/>
+	<field name="cobranza_sucursal" class="java.lang.Integer"/>
+	<field name="sucursal" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="grupo" class="java.lang.String"/>
+	<field name="saldo" class="java.lang.Double"/>
+	<field name="ticket" class="java.lang.Integer"/>
+	<field name="condicion_v" class="java.lang.Integer"/>
+	<field name="total_fv" class="java.lang.Double"/>
+	<variable name="sa_pendientes_saldo_1" class="java.lang.Double" resetType="Group" resetGroup="ticket" calculation="Sum">
+		<variableExpression><![CDATA[$F{sa_pendientes_saldo}]]></variableExpression>
+	</variable>
+	<variable name="cobranza_det_importe_1" class="java.lang.Double" resetType="Group" resetGroup="ticket" calculation="Sum">
+		<variableExpression><![CDATA[$F{cobranza_det_importe}]]></variableExpression>
+	</variable>
+	<variable name="saldo_1" class="java.lang.Double" resetType="Group" resetGroup="ticket" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="total_fv_1" class="java.lang.Double" resetType="Group" resetGroup="ticket" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_fv}]]></variableExpression>
+	</variable>
+	<variable name="cliente_importe1" class="java.lang.Integer" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$V{ImpPendiente}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="cliente_importe2" class="java.lang.Integer" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$V{ImpPagado}]]></variableExpression>
+	</variable>
+	<variable name="cliente_importe3" class="java.lang.Integer" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$V{saldo}]]></variableExpression>
+	</variable>
+	<variable name="ImpPendiente" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{condicion_v} == 1) ? 0 :  $F{sa_pendientes_saldo}]]></variableExpression>
+	</variable>
+	<variable name="ImpPagado" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{cobranza_det_importe} == null) ? $F{total_fv} :  $F{cobranza_det_importe}]]></variableExpression>
+	</variable>
+	<variable name="saldo" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{saldo} == null) ? 0 : $F{saldo}]]></variableExpression>
+	</variable>
+	<group name="ticket">
+		<groupExpression><![CDATA[$F{ticket}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<textField pattern="">
+					<reportElement x="137" y="0" width="65" height="15" uuid="744cc5bd-ba94-4b8e-9a2e-a5a81873b02e"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{condicion_v} == 1) ? "Contado" :  "Credito "]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="202" y="0" width="85" height="15" uuid="61600263-ee1a-4f3f-a53c-b940fb772c7f"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sa_pendientes_saldo} > 0) ? "Pendiente" :  "Cancelado "]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<staticText>
+					<reportElement x="183" y="7" width="52" height="15" uuid="dccfe39d-bc23-4782-9dfd-123b9bda38b8"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Totales :]]></text>
+				</staticText>
+				<textField pattern="#,##0">
+					<reportElement x="346" y="7" width="100" height="15" uuid="8420a5b4-9a57-49af-862f-9989f6bb5c9f"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[($F{condicion_v} == 1) ? $V{total_fv_1} :  $V{cobranza_det_importe_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="447" y="7" width="64" height="15" uuid="d53434b9-e6f1-4cbc-b3cd-b8c8db2bda82"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[($F{saldo} == null) ? 0 : $V{saldo_1}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="237" y="2" width="274" height="1" uuid="8d5172f8-566e-4e86-b16e-6d049b82f71e"/>
+					<graphicElement>
+						<pen lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+				<textField pattern="#,##0">
+					<reportElement x="234" y="7" width="112" height="15" uuid="f2e1b91e-0335-460d-afea-7ed31d78aaf8"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[($F{condicion_v} == 1) ? 0 :  $V{sa_pendientes_saldo_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="137" y="7" width="46" height="15" uuid="d257eb72-262e-485a-8c09-b937638caded"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{condicion_v} == 1) ? "Contado" :  "Credito "]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="cliente">
+		<groupExpression><![CDATA[$F{cliente}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement x="140" y="3" width="55" height="15" uuid="f8047ca8-9239-4991-a186-2bebbec5155b"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cliente:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="195" y="3" width="144" height="15" uuid="1d1d6aaa-74bd-4ad0-a123-c46b0718051f"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="346" y="3" width="48" height="15" uuid="54458b78-977b-45ff-a82f-df30879a5be3"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Grupo:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="394" y="3" width="147" height="15" uuid="aed5ba27-948a-4e7e-8c7c-d7d647cbf592"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{grupo}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26">
+				<staticText>
+					<reportElement x="183" y="7" width="52" height="15" uuid="cc6fa8c1-99e6-4bf2-a8da-a6d26d187d97"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Totales :]]></text>
+				</staticText>
+				<line>
+					<reportElement x="235" y="2" width="274" height="1" uuid="7aba2909-5c22-4ede-895d-707c24296436"/>
+					<graphicElement>
+						<pen lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<textField pattern="#,##0">
+					<reportElement x="237" y="7" width="112" height="15" uuid="7cd60ea1-3a0e-4099-bf72-b3cbc6db0b3c"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{cliente_importe1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="349" y="7" width="100" height="15" uuid="d67124fb-fa7f-48c3-89a8-0ea9443d7d6d"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{cliente_importe2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="449" y="7" width="64" height="15" uuid="f3dc6dc5-9c1d-4463-aab2-e20fa3b9d923"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{cliente_importe3}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="85" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="431" y="10" width="110" height="15" uuid="ec126385-861d-46d7-8f20-cfb34ebdc36f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="368" y="65" width="43" height="15" uuid="0a21d0be-37d2-41d3-8361-1bbf4198bffd"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hasta :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="412" y="65" width="100" height="15" uuid="038ffa84-dc3b-4fab-bba8-f8aa3bec0efb"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{FechaHasta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm:ss">
+				<reportElement x="431" y="25" width="110" height="15" uuid="82a09eb4-c424-41be-a308-0ce566403ebd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="368" y="50" width="43" height="15" uuid="29f712b0-9741-42a4-a9e4-dcebe10df350"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="50" width="65" height="15" uuid="d7079466-83fe-4088-9e0a-c29b1003c91d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="123" y="12" width="260" height="20" uuid="fae4c71b-8c26-42b3-8878-084183b27f55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado de Cuenta Cliente]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="412" y="50" width="100" height="15" uuid="7baab77f-02c4-4c77-965c-084b6bc46c33"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{FechaDesde}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="112" y="50" width="237" height="15" uuid="52b9eb7b-78ab-4b5b-b049-1432010bd3af"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{sucursal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="349" y="4" width="100" height="15" uuid="22cc3641-f112-4fb4-8d85-d9439a3c3949"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe Pagado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="237" y="4" width="112" height="15" uuid="a38a600f-f9d5-4e53-8c4a-edf46dc2f37c"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe Pendiente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="449" y="4" width="64" height="15" uuid="4a29d288-bf5d-42a5-bf4d-367d766579d5"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="137" y="4" width="100" height="15" uuid="0dc3e526-802f-467e-ae91-819bed6fb080"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Venta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="53" y="4" width="84" height="15" uuid="2e42c096-dbdc-465c-a9c3-a13e0b25b4be"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Ticket]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement x="53" y="1" width="84" height="15" uuid="c2b8fc8e-d413-4db6-a2ff-5662044aaf59"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ticket}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="137" y="1" width="100" height="15" uuid="55a24e1f-0a90-46b9-bbc2-b6fd1db155c7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{factura_venta_fecha}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="237" y="1" width="109" height="15" uuid="0521c597-8207-45e9-bafc-e053f7ad15be"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{ImpPendiente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="347" y="2" width="102" height="14" uuid="cbcc66c2-e814-43a3-a7eb-b6bbc573b96d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{ImpPagado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="449" y="2" width="64" height="14" uuid="88d173a5-d045-4750-9e99-5f15ed729871"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{saldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="431" y="7" width="80" height="15" uuid="22a44631-05fe-4703-ad4c-cc2cd4a37e91"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="511" y="7" width="30" height="15" uuid="fd046f0e-57cd-4da6-85f6-732892ab211b"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

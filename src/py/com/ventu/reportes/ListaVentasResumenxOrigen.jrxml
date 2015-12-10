@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListaVentasResumen" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7b7a1ae1-1c77-43fc-9470-8a1452ef74d5">
+	<property name="ireport.zoom" value="1.331000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaDesde" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaHasta" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sucursal" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select fvd.subototal as venta, p.origen
+from factura_venta fv
+inner join factura_venta_det fvd on fvd.nro_trans = fv.nro_trans
+inner join productos p on p.id = fvd.producto
+where fv.fecha::timestamp::date  >=  $P{fechaDesde}
+and fv.fecha::timestamp::date <=  $P{fechaHasta}
+and fv.sucursal = $P{sucursal}]]>
+	</queryString>
+	<field name="venta" class="java.lang.Double"/>
+	<field name="origen" class="java.lang.String"/>
+	<variable name="total_nac" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{origen}.equals("Nacional") ? $F{venta} : 0]]></variableExpression>
+	</variable>
+	<variable name="total_imp" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{origen}.equals("Importado") ? $F{venta} : 0]]></variableExpression>
+	</variable>
+	<variable name="total_gral" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{total_nac} + $V{total_imp}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="83" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="6091a383-42df-47f3-8252-c621a5de0620" x="2" y="17" width="552" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resumen de Ventas x Origen]]></text>
+			</staticText>
+			<textField pattern="HH:mm:ss">
+				<reportElement uuid="20a081ee-5e0f-4018-bdec-8f89d8a1dd4c" x="445" y="22" width="110" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="f207285e-fea3-4040-8d3a-f89839b4cb42" x="445" y="7" width="110" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="4dfc9292-cd6f-4016-bde0-ec66d8d89b85" x="145" y="46" width="41" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e15e9a63-d051-4570-a93b-23b085237679" x="298" y="46" width="41" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hasta:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="f6e7d0ac-7029-4030-8531-e4a0dfbbbb63" x="186" y="46" width="100" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{fechaDesde}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="0a7f7aa0-c79c-4742-a7ce-f5bbbc09f95c" x="338" y="46" width="100" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="375078a3-73fb-4e47-a3b4-81628eb9a2a0" x="2" y="75" width="552" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="163" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="41aee1e5-c18f-43dd-ab8c-c8b9a3f19d48" x="98" y="13" width="374" height="28"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="020ba7a4-27ea-474a-ba37-78490c4061c6" x="98" y="97" width="374" height="26"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="46107af8-a4fb-4ee8-89ff-16e45261aa17" x="98" y="41" width="374" height="56"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="635cb20e-677c-453f-bbb8-86814aecfc4e" x="119" y="47" width="167" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Productos Nacionales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6566e135-eaf4-4c83-b29f-3daf7f5f172a" x="119" y="67" width="167" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Productos Importados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8a321e94-2dca-4bc1-a5cb-0973bf97d406" x="119" y="100" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Totales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2e2ba795-45f3-408a-874e-66df460588aa" x="104" y="13" width="239" height="28"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resumen]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement uuid="0ba73f33-a93d-480c-9933-c40550fcf161" x="300" y="47" width="122" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{total_nac}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement uuid="3e970e0c-58e2-4299-99c5-d4f622a91fe5" x="300" y="67" width="122" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{total_imp}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0">
+				<reportElement uuid="8612da33-834c-40d8-8a2e-04140972fd98" x="301" y="100" width="122" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_gral}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement uuid="9732b319-725a-480c-bffb-0ed896f6470e" x="524" y="4" width="30" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="394eb219-2fe5-4c4a-9beb-74ff1d535cd0" x="444" y="4" width="80" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

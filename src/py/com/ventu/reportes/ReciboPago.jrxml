@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReciboPago" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" isIgnorePagination="true" uuid="f0991deb-cf94-4ba3-8a74-9e19a8e5cd5a">
+	<property name="ireport.zoom" value="1.6105100000000068"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nroTrans" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="importeLetras" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select cob.cod_cliente, cl.cliente, cl.ci, cl.ruc, cob.importe_total, cob.nro_recibo, cob.fecha as fecha_cobro,
+det.ticket, det.fecha_vto as fecha_vto_ticket, det.importe as importe_pago, cf.caja, cj.nombre as nombre_caja,
+cf.sucursal, su.nombre as nombre_sucursal, cf.comercio, cf.direccion, cf.ruc as ruc_comercio, cf.telefono
+from cobranza cob
+inner join cobranza_det det on det.nro_recibo = cob.nro_trans
+inner join clientes cl on cl.id = cob.cod_cliente
+inner join configuraciones cf on cob.sucursal = cf.sucursal and cob.caja = cf.caja
+inner join sucursales su on su.id = cf.sucursal
+inner join caja cj on cj.id = cf.caja
+where cob.nro_trans = $P{nroTrans}]]>
+	</queryString>
+	<field name="cod_cliente" class="java.lang.Integer">
+		<fieldDescription><![CDATA[id del cliente]]></fieldDescription>
+	</field>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="ci" class="java.lang.String"/>
+	<field name="ruc" class="java.lang.String"/>
+	<field name="importe_total" class="java.lang.Double"/>
+	<field name="nro_recibo" class="java.lang.Integer"/>
+	<field name="fecha_cobro" class="java.sql.Timestamp"/>
+	<field name="ticket" class="java.lang.Integer"/>
+	<field name="fecha_vto_ticket" class="java.sql.Date"/>
+	<field name="importe_pago" class="java.lang.Double"/>
+	<field name="caja" class="java.lang.Integer"/>
+	<field name="nombre_caja" class="java.lang.String"/>
+	<field name="sucursal" class="java.lang.Integer"/>
+	<field name="nombre_sucursal" class="java.lang.String"/>
+	<field name="comercio" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="ruc_comercio" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="9" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="167" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="5" width="228" height="15" uuid="8c65cc83-18e8-4ae9-af4f-5542c78a3046"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{comercio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="228" height="15" uuid="cbb2079d-6ff4-4802-a57b-a63ca9baed5e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="35" width="228" height="15" uuid="c4264d0a-59a5-44a0-99b8-21a0aa8fa4f0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["RUC: " + $F{ruc_comercio} + " - Tel.: " + $F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="84" width="127" height="20" uuid="3315c51d-a378-4bf9-836e-fe368c7d8f14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Recibimos del Señor/a:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="104" width="144" height="20" uuid="1f9f8734-b7a7-4397-87b7-023c08e54fd0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["La cantidad de Guaraníes:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="124" width="555" height="20" uuid="2f55bb44-9dc1-48a4-97d8-2e9d5ac5fcdf"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["En concepto de pago de:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="84" width="428" height="20" uuid="01060e7b-7364-409f-8a7c-0e59713a7a37"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["(" + $F{ci} + ") " + $F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="144" y="104" width="411" height="20" uuid="b8dd33e0-8720-4a99-b9a4-665824c0b403"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{importeLetras}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="381" y="5" width="146" height="30" uuid="31c199d4-e176-4464-8ccd-946a23659fe1"/>
+			</rectangle>
+			<textField pattern="#,##0">
+				<reportElement x="392" y="5" width="131" height="30" uuid="ecfd5e9d-1cfc-4d48-bf34-a95b09c9bc7b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="349" y="5" width="32" height="30" uuid="541a0327-97e6-4816-a962-a95c1f500957"/>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gs.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="127" y="103" width="428" height="1" uuid="97b4d8bc-400b-41db-ba81-beb857edf889"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="144" y="123" width="409" height="1" uuid="9e59ec70-49f9-40f4-8c63-9fb239368f7b"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="2" y="150" width="62" height="15" uuid="9d1b9d16-6e77-403a-a1c8-0c25469e958e"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Ticket]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="65" y="150" width="90" height="15" uuid="051b2db4-66eb-42c1-b632-e187957eccbc"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Importe Pagado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="228" y="5" width="111" height="20" uuid="3cacbaaa-aa12-49a1-bfb8-87be9634696b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Recibo Nro.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="228" y="25" width="111" height="20" uuid="759581bb-c8b5-4082-9ef1-e50a2070ceba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_recibo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="54" width="551" height="1" uuid="758f19a9-8b02-4f69-8ce4-e3c9a643badd"/>
+			</line>
+			<line>
+				<reportElement x="2" y="164" width="153" height="1" uuid="0d366b09-8a46-4f77-8805-312649858e61"/>
+			</line>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="367" y="61" width="181" height="15" uuid="a9e06561-a407-415d-bd12-1e314ed44186"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="3" y="3" width="62" height="15" uuid="8006741a-6e5a-411a-813a-0cbfd1a407ba"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ticket}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="65" y="3" width="90" height="15" uuid="0c6dbf33-3e42-4a88-aa56-e1ae9355a482"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{importe_pago}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="439" y="11" width="100" height="15" uuid="6988c900-18dd-4fc3-bcf1-155c965d8285"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Firma]]></text>
+			</staticText>
+			<line>
+				<reportElement x="439" y="8" width="100" height="1" uuid="0e275998-544c-4a34-a884-22fde3ffec88"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EnvioSucursal" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ba747ba6-1193-4f78-87f7-8f82acea8890">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="10"/>
+	<property name="ireport.y" value="17"/>
+	<parameter name="ES_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     envio_sucursal."nro_envio" AS envio_sucursal_nro_envio,
+     envio_sucursal."estado" AS envio_sucursal_estado,
+     envio_sucursal."estado_sincro" AS envio_sucursal_estado_sincro,
+     envio_sucursal."fecha" AS envio_sucursal_fecha,
+     envio_sucursal."fecha_mod" AS envio_sucursal_fecha_mod,
+     envio_sucursal."importe_total" AS envio_sucursal_importe_total,
+     envio_sucursal."observacion" AS envio_sucursal_observacion,
+     envio_sucursal."deposito_destino" AS envio_sucursal_deposito_destino,
+     envio_sucursal."deposito_origen" AS envio_sucursal_deposito_origen,
+     envio_sucursal."usuario_mod" AS envio_sucursal_usuario_mod,
+     envio_sucursal_det."cantidad" AS envio_sucursal_det_cantidad,
+     envio_sucursal_det."estado_sincro" AS envio_sucursal_det_estado_sincro,
+     envio_sucursal_det."fecha_mod" AS envio_sucursal_det_fecha_mod,
+     envio_sucursal_det."fecha_sincro" AS envio_sucursal_det_fecha_sincro,
+     envio_sucursal_det."precio_unitario" AS envio_sucursal_det_precio_unitario,
+     envio_sucursal_det."subtotal" AS envio_sucursal_det_subtotal,
+     envio_sucursal_det."producto" AS envio_sucursal_det_producto,
+     envio_sucursal_det."nro_envio" AS envio_sucursal_det_nro_envio,
+     envio_sucursal_det."linea" AS envio_sucursal_det_linea,
+     envio_sucursal_det."usuario_mod" AS envio_sucursal_det_usuario_mod,
+     productos."id" AS productos_id,
+     productos."barras" AS productos_barras,
+     productos."costo" AS productos_costo,
+     productos."descripcion" AS productos_descripcion,
+     productos."observacion" AS productos_observacion,
+     productos."precio" AS productos_precio,
+     productos."presentacion" AS productos_presentacion,
+     productos."descuento" AS productos_descuento,
+sucursalesdestino."nombre" AS sucursal_destino,
+sucursalesorigen."nombre" AS sucursal_origen
+FROM
+     "public"."envio_sucursal" envio_sucursal INNER JOIN "public"."envio_sucursal_det" envio_sucursal_det ON envio_sucursal."nro_envio" = envio_sucursal_det."nro_envio"
+     INNER JOIN "public"."productos" productos ON envio_sucursal_det."producto" = productos."id" INNER JOIN "public"."sucursales" sucursalesdestino ON envio_sucursal."deposito_destino" = sucursalesdestino."id" INNER JOIN "public"."sucursales" sucursalesorigen ON envio_sucursal."deposito_origen" = sucursalesorigen."id" where envio_sucursal."nro_envio" = $P{ES_ID}]]>
+	</queryString>
+	<field name="envio_sucursal_nro_envio" class="java.lang.Integer"/>
+	<field name="envio_sucursal_estado" class="java.lang.String"/>
+	<field name="envio_sucursal_estado_sincro" class="java.lang.String"/>
+	<field name="envio_sucursal_fecha" class="java.sql.Date"/>
+	<field name="envio_sucursal_fecha_mod" class="java.sql.Date"/>
+	<field name="envio_sucursal_importe_total" class="java.lang.Double"/>
+	<field name="envio_sucursal_observacion" class="java.lang.String"/>
+	<field name="envio_sucursal_deposito_destino" class="java.lang.Integer"/>
+	<field name="envio_sucursal_deposito_origen" class="java.lang.Integer"/>
+	<field name="envio_sucursal_usuario_mod" class="java.lang.Integer"/>
+	<field name="envio_sucursal_det_cantidad" class="java.lang.Double"/>
+	<field name="envio_sucursal_det_estado_sincro" class="java.lang.String"/>
+	<field name="envio_sucursal_det_fecha_mod" class="java.sql.Date"/>
+	<field name="envio_sucursal_det_fecha_sincro" class="java.sql.Date"/>
+	<field name="envio_sucursal_det_precio_unitario" class="java.lang.Double"/>
+	<field name="envio_sucursal_det_subtotal" class="java.lang.Double"/>
+	<field name="envio_sucursal_det_producto" class="java.lang.Integer"/>
+	<field name="envio_sucursal_det_nro_envio" class="java.lang.Integer"/>
+	<field name="envio_sucursal_det_linea" class="java.lang.Integer"/>
+	<field name="envio_sucursal_det_usuario_mod" class="java.lang.Integer"/>
+	<field name="productos_id" class="java.lang.Integer"/>
+	<field name="productos_barras" class="java.lang.String"/>
+	<field name="productos_costo" class="java.lang.Double"/>
+	<field name="productos_descripcion" class="java.lang.String"/>
+	<field name="productos_observacion" class="java.lang.String"/>
+	<field name="productos_precio" class="java.lang.Double"/>
+	<field name="productos_presentacion" class="java.lang.String"/>
+	<field name="productos_descuento" class="java.lang.Integer"/>
+	<field name="sucursal_destino" class="java.lang.String"/>
+	<field name="sucursal_origen" class="java.lang.String"/>
+	<variable name="cantidad" class="java.lang.Double" incrementType="Report" calculation="Sum"/>
+	<variable name="envio_sucursal_det_subtotal_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{envio_sucursal_det_subtotal}]]></variableExpression>
+	</variable>
+	<variable name="productos_precio_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{productos_precio}]]></variableExpression>
+	</variable>
+	<variable name="productos_costo_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{productos_costo}]]></variableExpression>
+	</variable>
+	<variable name="envio_sucursal_det_cantidad_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{envio_sucursal_det_cantidad}]]></variableExpression>
+	</variable>
+	<variable name="productos_id_1" class="java.lang.Integer" calculation="StandardDeviation">
+		<variableExpression><![CDATA[$F{productos_id}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="106" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="28273e4b-69e2-45e0-a6dd-8cbc43fa91d4" x="129" y="26" width="308" height="30"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="15"/>
+				</textElement>
+				<text><![CDATA[Reporte de Envio a Sucursal]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="2f8436ce-51c8-4f38-ac5b-de28a0672e96" x="445" y="6" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="8a4850bc-6f0c-48f8-ab85-7d552db69069" x="525" y="6" width="30" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="3bac9f46-c38b-4410-aa0a-7ec7c1b1a6a6" x="445" y="26" width="110" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="0cff1471-4fde-42a8-8c2f-f63d567a5c04" x="455" y="36" width="100" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2cb67044-336e-435c-b1b7-2d74c1c7fb27" x="80" y="56" width="164" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{envio_sucursal_nro_envio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ca327945-aaf4-4f10-ac8d-99d12d82a58f" x="0" y="56" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Nro. Envio:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="b06b4ec7-7a75-44c9-a0f6-988dfe23e915" x="105" y="83" width="159" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sucursal_origen}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1d622e86-4204-4e66-b975-f3b5aefb07a1" x="0" y="83" width="105" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Sucursal Origen:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="d867acb5-2126-4e91-87c3-25ede791b7ff" x="337" y="56" width="137" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{envio_sucursal_fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5dac11bf-edea-4146-8876-3f00c839f390" x="285" y="56" width="52" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5bc50437-8875-435d-953c-f31b3c3a1863" x="285" y="83" width="105" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Sucursal Destino:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a04eb5f4-5000-4976-9e13-494076bf009c" x="390" y="83" width="146" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sucursal_destino}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="36" splitType="Stretch">
+			<line>
+				<reportElement uuid="c86fb8ee-2c46-4fbd-8876-48a208b9d985" x="4" y="0" width="543" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="ce878780-795b-412a-9ecf-7408fa63de6a" x="4" y="7" width="66" height="20"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4819f451-ee39-420a-ae53-b4ad2b69d2e8" x="70" y="7" width="164" height="20"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b068987b-e857-4c9a-a705-59cbda40fbf1" x="234" y="7" width="68" height="20"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f5516727-33fb-4dd7-a289-d0921ff30fa3" x="302" y="7" width="78" height="20"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9288d3c-db28-4aba-93b9-4e72642eb1c5" x="380" y="7" width="74" height="20"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Venta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="db163eae-9b3a-4854-b215-25f5115b7e15" x="454" y="7" width="93" height="20"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costo Subtotal]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="2bb2ec7d-b044-46ef-8459-a9f51f07d827" x="4" y="35" width="543" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement uuid="6d900414-829b-4b01-ab38-35e409d2cc80" x="4" y="6" width="66" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{productos_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="75e3c28e-4a6e-46a6-bc88-7a776c1b79cc" x="70" y="6" width="164" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{productos_descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b613df82-d0bf-4c88-98ba-cb2be4c9f516" x="302" y="6" width="78" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{productos_costo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d126901a-aaf9-43e2-ace3-bcf74faf536b" x="380" y="6" width="74" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{productos_precio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f2d7a847-3433-4e89-bdb0-7e4ed57a556b" x="454" y="6" width="92" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{envio_sucursal_det_subtotal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d4c2f412-e86d-4ae3-bdbf-7b5ad755441d" x="234" y="6" width="68" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{envio_sucursal_det_cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="41da6d79-25d0-4a70-a2e8-75fdc816db8c" x="0" y="10" width="70" height="20"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Totales:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="e53a3e62-fe99-4d44-9924-34778804b63a" x="454" y="10" width="93" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{envio_sucursal_det_subtotal_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9b0e7272-2e9d-48e4-94ce-4d127afc4ca5" x="380" y="10" width="74" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{productos_precio_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6ba27376-8922-41a6-945d-2b6e5b627948" x="302" y="10" width="78" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{productos_costo_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c5dd894e-071f-4f9c-a575-f0075738d0bb" x="234" y="10" width="68" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{envio_sucursal_det_cantidad_1}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="c684aed0-ee7e-403e-95fe-1deec92191a5" x="4" y="0" width="543" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

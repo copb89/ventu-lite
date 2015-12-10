@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="VentasVendedorResumen" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fc9a4c93-dc51-47f8-aa5f-50b020b20de5">
+	<property name="ireport.zoom" value="1.5000000000000009"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Sucursal_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaDesde" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaHasta" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     vendedores."id" AS codigo,
+     vendedores."nombre" AS vendedores_nombre,
+     factura_venta."condicion_venta" AS condicion_venta,
+     grupo_clientes."descripcion" AS Grupo,
+     sucursales."nombre" AS sucursales_nombre,
+     factura_venta."total_dscto" AS total_dscto,
+     factura_venta."total" AS total,
+     clientes."cliente" AS cliente,
+     factura_venta."nro_trans" AS nro_trans,
+     factura_venta."fecha" AS fecha,
+     tarjetas."descripcion" AS tarjeta,
+     factura_venta."cupon" AS cupon
+FROM
+     "public"."vendedores" vendedores INNER JOIN "public"."factura_venta" factura_venta ON vendedores."id" = factura_venta."vendedor"
+     INNER JOIN "public"."clientes" clientes ON factura_venta."cliente" = clientes."id"
+     INNER JOIN "public"."sucursales" sucursales ON factura_venta."sucursal" = sucursales."id"
+     INNER JOIN "public"."grupo_clientes" grupo_clientes ON clientes."grupo_cliente" = grupo_clientes."id"
+    INNER JOIN "public"."tarjetas" tarjetas ON tarjetas."id"= factura_venta."tarjeta" WHERE sucursales."id"= $P{Sucursal_ID} AND factura_venta."fecha"
+BETWEEN $P{FechaDesde} AND $P{FechaHasta};]]>
+	</queryString>
+	<field name="codigo" class="java.lang.Integer"/>
+	<field name="vendedores_nombre" class="java.lang.String"/>
+	<field name="condicion_venta" class="java.lang.Integer"/>
+	<field name="grupo" class="java.lang.String"/>
+	<field name="sucursales_nombre" class="java.lang.String"/>
+	<field name="total_dscto" class="java.lang.Double"/>
+	<field name="total" class="java.lang.Double"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="nro_trans" class="java.lang.Integer"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="tarjeta" class="java.lang.String"/>
+	<field name="cupon" class="java.lang.String"/>
+	<variable name="total_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<variable name="total_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="114" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="445" y="0" width="110" height="15" uuid="c9800bdf-5c32-47ce-9a38-c40688f972fb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm:ss">
+				<reportElement x="445" y="15" width="110" height="15" uuid="0ecc84ef-be4e-4b21-9e3d-28a42b5fac9e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="102" y="21" width="323" height="20" uuid="43ba2b0b-f0c0-4e4b-9383-3a90d604f92c"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="15"/>
+				</textElement>
+				<text><![CDATA[Ventas por Tarjetas de Crédito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="66" width="55" height="15" uuid="f64ff2d0-9915-44bd-8543-d34b9ff2e74f"/>
+				<textElement>
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Sucursal :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="86" width="52" height="15" uuid="a69b2973-8b0c-4721-9e95-19bec1f75534"/>
+				<textElement>
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Desde :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="86" width="43" height="15" uuid="9e44992c-c38e-4e21-8c80-441af5b1399a"/>
+				<textElement>
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Hasta :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="76" y="66" width="130" height="15" uuid="f42816ff-bf29-4cd0-a285-332c05cdd225"/>
+				<textFieldExpression><![CDATA[$F{sucursales_nombre}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="79" y="86" width="100" height="15" uuid="3d90ffb5-6cef-4948-b106-bf7010d1c7c3"/>
+				<textFieldExpression><![CDATA[$P{FechaDesde}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="375" y="86" width="100" height="15" uuid="d28f17ca-f456-43f0-bc76-1897a9041ee2"/>
+				<textFieldExpression><![CDATA[$P{FechaHasta}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="14" y="3" width="66" height="15" uuid="dbdeed2d-5f9d-44c6-ae43-16415d68c868"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Ticket]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="3" width="140" height="15" uuid="a5125968-5a42-4a12-be41-8ca0e3d2764e"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="219" y="3" width="66" height="15" uuid="4bc3b5cd-b722-4aed-af38-ba9fdad8b05c"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="3" width="103" height="15" uuid="39cf1032-ff49-4050-9068-bb00ab8ce6a4"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tarjeta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="3" width="87" height="15" uuid="dc68a370-3222-4749-9722-4a3d610bfb50"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cupón de Pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="475" y="3" width="70" height="15" uuid="a2d8cdd8-8d91-424c-9924-94c451838647"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<line>
+				<reportElement x="14" y="-4" width="531" height="1" uuid="648a0fc8-7b5e-47a8-9f94-a434802c5771"/>
+			</line>
+			<textField>
+				<reportElement x="80" y="3" width="139" height="13" uuid="5c2aaa7e-13a9-4729-bb27-7e922aef1235"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="14" y="3" width="66" height="13" uuid="e10141c2-5a77-4794-aa38-c4ab166bc36b"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{nro_trans}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="219" y="3" width="66" height="13" uuid="c7c026f9-830c-477b-9650-8ed733163188"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="475" y="3" width="70" height="13" uuid="bdbcf758-7e03-45e8-960a-90df926e92e3"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="285" y="3" width="100" height="13" uuid="f11452f9-d636-46a4-919b-a725720f4de1"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tarjeta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="385" y="3" width="90" height="13" uuid="1be4b6e1-113b-4cc4-94e0-4d118ff093ab"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{cupon}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="37">
+			<textField>
+				<reportElement x="435" y="12" width="80" height="20" uuid="43cae636-19f5-4dd3-888c-3fb2bb95d1c7"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="12" width="30" height="20" uuid="b997f472-0828-4968-befb-bf4ca67ca204"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<line>
+				<reportElement x="14" y="4" width="531" height="1" uuid="2a590067-3012-46ab-91e9-ec27966390d8"/>
+			</line>
+			<textField pattern="#,##0">
+				<reportElement x="465" y="11" width="80" height="15" uuid="04ad4954-fdb1-46c2-a4b6-28f6b8405e63"/>
+				<textFieldExpression><![CDATA[$V{total_2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="332" y="11" width="103" height="15" uuid="77f80ddc-4a3e-4a4d-9e19-cc5a571ec013"/>
+				<box>
+					<pen lineColor="#BBB2B2"/>
+					<topPen lineColor="#BBB2B2"/>
+					<leftPen lineColor="#BBB2B2"/>
+					<bottomPen lineColor="#BBB2B2"/>
+					<rightPen lineColor="#BBB2B2"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total : ]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

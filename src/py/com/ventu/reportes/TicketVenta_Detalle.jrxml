@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TicketVenta_Detalle" pageWidth="187" pageHeight="227" whenNoDataType="AllSectionsNoDetail" columnWidth="187" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" isIgnorePagination="true" uuid="a7ce8da6-29ab-467c-8495-9865cfc2daa5">
+	<property name="ireport.zoom" value="4.177248169415656"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nroTrans" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     factura_venta_det."cantidad" AS factura_venta_det_cantidad,
+     factura_venta_det."imp_dscto" AS factura_venta_det_imp_dscto,
+     factura_venta_det."precio_unit" AS factura_venta_det_precio_unit,
+     factura_venta_det."proc_dscto" AS factura_venta_det_proc_dscto,
+     factura_venta_det."subototal" AS factura_venta_det_subototal,
+     factura_venta_det."nro_trans" AS factura_venta_det_nro_trans,
+     factura_venta_det."producto" AS factura_venta_det_producto,
+     factura_venta_det."linea" AS factura_venta_det_linea,
+     productos."id" AS productos_id,
+     productos."descripcion" AS productos_descripcion,
+     productos."presentacion" AS productos_presentacion
+FROM
+     "public"."productos" productos INNER JOIN "public"."factura_venta_det" factura_venta_det ON productos."id" = factura_venta_det."producto"
+WHERE
+     factura_venta_det."nro_trans" = $P{nroTrans}]]>
+	</queryString>
+	<field name="factura_venta_det_cantidad" class="java.lang.Double"/>
+	<field name="factura_venta_det_imp_dscto" class="java.lang.Double"/>
+	<field name="factura_venta_det_precio_unit" class="java.lang.Double"/>
+	<field name="factura_venta_det_proc_dscto" class="java.lang.Double"/>
+	<field name="factura_venta_det_subototal" class="java.lang.Double"/>
+	<field name="factura_venta_det_nro_trans" class="java.lang.Integer"/>
+	<field name="factura_venta_det_producto" class="java.lang.Integer"/>
+	<field name="factura_venta_det_linea" class="java.lang.Integer"/>
+	<field name="productos_id" class="java.lang.Integer"/>
+	<field name="productos_descripcion" class="java.lang.String"/>
+	<field name="productos_presentacion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="2" width="22" height="12" uuid="069436d2-c2f3-489d-8cfb-976a0ba254ff"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productos_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="2" width="154" height="12" uuid="3326fbda-4545-4e9a-bbda-5dbbd9a16519"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productos_descripcion} + " " + $F{productos_presentacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="65" y="13" width="48" height="12" uuid="d819acb2-2a56-44f4-8c66-a881b49788b5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_venta_det_precio_unit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="13" width="30" height="12" uuid="a826a1c1-98a7-4095-8691-2666ae8f6702"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_venta_det_cantidad} + "   x   "]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="135" y="13" width="48" height="12" uuid="5d8e1327-73e1-420d-ab94-eb91d1dd64ad"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_venta_det_subototal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
