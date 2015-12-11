@@ -2,7 +2,6 @@ package py.com.ventu.controladores;
 
 import java.io.Serializable;
 import javax.persistence.EntityManager;
-import javax.swing.JOptionPane;
 import py.com.ventu.entidades.Configuraciones;
 
 /**
@@ -21,7 +20,7 @@ public class ConfiguracionesJpaController implements Serializable {
 
             if (conf.getId() == null) {
                 em.getTransaction().begin();
-               em.persist(conf);
+                em.persist(conf);
                 em.getTransaction().commit();
             } else {
                 em.getTransaction().begin();
