@@ -9,6 +9,7 @@
     <class>py.com.ventu.entidades.TipoProducto</class>
     <class>py.com.ventu.entidades.Usuario</class>
     <class>py.com.ventu.entidades.Vendedor</class>
+    <class>py.com.ventu.entidades.MetodoPago</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ventu"/>
       <property name="javax.persistence.jdbc.password" value="postgres"/>

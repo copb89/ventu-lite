@@ -119,7 +119,6 @@ public class Vendedor implements Serializable {
 
     @Override
     public String toString() {
-        //return "py.com.progress.sgf.entidades.Vendedores[ id=" + id + " ]";
         return nombre;
     }  
 

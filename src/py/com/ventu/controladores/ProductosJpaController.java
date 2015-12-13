@@ -7,7 +7,6 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import py.com.ventu.controladores.exceptions.NonexistentEntityException;
 import py.com.ventu.entidades.Producto;
-import py.com.ventu.entidades.Proveedor;
 import py.com.ventu.util.FiltersObject;
 
 /**

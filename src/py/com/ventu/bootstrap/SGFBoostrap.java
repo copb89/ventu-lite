@@ -2,10 +2,9 @@ package py.com.ventu.bootstrap;
 
 import javax.persistence.EntityManager;
 import py.com.ventu.controladores.CajaJpaController;
-import py.com.ventu.controladores.ProductosJpaController;
-import py.com.ventu.controladores.ProveedoresJpaController;
 import py.com.ventu.controladores.UsuarioJpaController;
 import py.com.ventu.entidades.Caja;
+import py.com.ventu.entidades.MetodoPago;
 import py.com.ventu.entidades.Usuario;
 
 /**
@@ -17,10 +16,9 @@ public class SGFBoostrap {
 
     private EntityManager em;
 
-    private ProveedoresJpaController proveedoresService;
-    private ProductosJpaController productosService;
     private UsuarioJpaController usuariosService;
     private CajaJpaController cajaService;
+    private MetodoPagoJpaController metodoPagoService;
 
     public SGFBoostrap(EntityManager em) throws Exception {
         this.em = em;
@@ -38,11 +36,16 @@ public class SGFBoostrap {
         if(cajaService.listarCaja().isEmpty()){
             cajas();
         }
+        
+        if(metodoPagoService.listarMetodoPago().isEmpty()){
+            metodoPago();
+        }
     }
 
     private void iniciarController() {
         usuariosService = new UsuarioJpaController(em);
         cajaService = new CajaJpaController(em);
+        metodoPago = new MetodoPagoController(em);
     }
 
     private void usuarios() throws Exception {
@@ -62,6 +65,15 @@ public class SGFBoostrap {
         caja.setDescripcion("Caja Venta");
         
         cajaService.guardar(caja);
+    }
+    
+    private void metodoPago() throws Exception {
+        MetodoPago mp = new MetodoPago();
+
+        mp.setDescripcion("Efectivo");
+        mp.setActivo(true);
+        
+        metodoPagoService.guardar(mp);
     }
 
 }

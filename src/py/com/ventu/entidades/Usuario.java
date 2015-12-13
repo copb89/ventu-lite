@@ -141,7 +141,6 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-       // return "py.com.progress.sgf.entidades.Usuario[ id=" + id + " ]";
         return username;
     }
 }

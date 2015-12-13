@@ -1,18 +1,12 @@
 package py.com.ventu.app.util.buscadores;
 
 import java.awt.event.KeyEvent;
-import static java.awt.event.KeyEvent.VK_ENTER;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import java.awt.event.KeyListener;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.swing.JInternalFrame;
 import javax.swing.table.DefaultTableModel;
-import py.com.ventu.controladores.ProveedoresJpaController;
-import py.com.ventu.controladores.exceptions.NonexistentEntityException;
-import py.com.ventu.entidades.Proveedor;
 
 /**
  * @author Carlos Patino
@@ -24,8 +18,6 @@ public class FrmBuscarGenerico extends javax.swing.JDialog {
     private String origen;
     private String codRetorno;
 
-    //Definicion de los servicios para cada entidad
-    private ProveedoresJpaController proveedoresJpaController;
 
     public FrmBuscarGenerico(JInternalFrame este, EntityManager em, String iden) {
         initComponents();
@@ -36,7 +28,7 @@ public class FrmBuscarGenerico extends javax.swing.JDialog {
     }
 
     public void inicializarServicios() {
-        proveedoresJpaController = new ProveedoresJpaController(em);
+      //  proveedoresJpaController = new ProveedoresJpaController(em);
     }
 
     public void inicializarComponentes(JInternalFrame este, EntityManager em, String iden) {
@@ -249,29 +241,11 @@ public class FrmBuscarGenerico extends javax.swing.JDialog {
         tableModel();
         switch (origen) {
             case "proveedor":
-                buscarProveedor();
+            //nkj
                 break;
             default:
                 System.out.println("Prcesar aqui defecto");
                 break;
-        }
-    }
-
-    public void buscarProveedor() {
-        String filter = this.txtFiltro.getText();
-        List<Proveedor> listaProveedores = null;
-
-        if (filter.trim().isEmpty()) {
-            listaProveedores = proveedoresJpaController.listarProveedores();
-        } else {
-            listaProveedores = proveedoresJpaController.listarProveedores(filter);
-        }
-
-        for (Proveedor prov : listaProveedores) {
-            cargarGrilla(
-                    String.valueOf(prov.getId()),
-                    prov.getRuc() + " - " + prov.getNombre()
-            );
         }
     }
 

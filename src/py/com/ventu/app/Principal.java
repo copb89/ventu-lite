@@ -17,9 +17,7 @@ import py.com.ventu.app.mantenimiento.FrmCaja;
 import py.com.ventu.app.mantenimiento.FrmClientes;
 import py.com.ventu.app.mantenimiento.FrmConfiguracion;
 import py.com.ventu.app.mantenimiento.FrmProductos;
-import py.com.ventu.app.mantenimiento.FrmTipoProductos;
 import py.com.ventu.app.mantenimiento.FrmUsuarios;
-import py.com.ventu.app.mantenimiento.FrmVendedores;
 import py.com.ventu.app.seguridad.FrmCambioContrasena;
 import py.com.ventu.app.ventas.FrmComprobantesEmitidos;
 import py.com.ventu.app.ventas.FrmControlCaja;
@@ -79,7 +77,6 @@ public class Principal extends javax.swing.JFrame {
         mnuVentas = new javax.swing.JMenu();
         mnuVentasFacturacion = new javax.swing.JMenuItem();
         mnuVenta_EmisionFacturaVenta = new javax.swing.JMenuItem();
-        mnuVentas_cobranzas = new javax.swing.JMenuItem();
         mnu_ajuste_stock = new javax.swing.JMenuItem();
         mnuInformes = new javax.swing.JMenu();
         mnuListadoStock = new javax.swing.JMenuItem();
@@ -96,12 +93,8 @@ public class Principal extends javax.swing.JFrame {
         mnuEstadiRanking = new javax.swing.JMenuItem();
         mnuDatos = new javax.swing.JMenu();
         mnuCaja = new javax.swing.JMenuItem();
-        mnu_dtos_departamentos = new javax.swing.JMenuItem();
-        mnu_dtos_empresa = new javax.swing.JMenuItem();
         mantMnuClientes = new javax.swing.JMenuItem();
         mnuProductos = new javax.swing.JMenuItem();
-        mnuTipoProductos = new javax.swing.JMenuItem();
-        mnuVendedores = new javax.swing.JMenuItem();
         mnuSeguridad = new javax.swing.JMenu();
         mnuUsuarios = new javax.swing.JMenuItem();
         mnuSeguridad_cambioContrasena = new javax.swing.JMenuItem();
@@ -170,15 +163,6 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         mnuVentas.add(mnuVenta_EmisionFacturaVenta);
-
-        mnuVentas_cobranzas.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        mnuVentas_cobranzas.setText("Cobranzas");
-        mnuVentas_cobranzas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuVentas_cobranzasActionPerformed(evt);
-            }
-        });
-        mnuVentas.add(mnuVentas_cobranzas);
 
         mnu_ajuste_stock.setText("Ajuste de Stock");
         mnu_ajuste_stock.addActionListener(new java.awt.event.ActionListener() {
@@ -298,22 +282,6 @@ public class Principal extends javax.swing.JFrame {
         });
         mnuDatos.add(mnuCaja);
 
-        mnu_dtos_departamentos.setText("Departamentos");
-        mnu_dtos_departamentos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnu_dtos_departamentosActionPerformed(evt);
-            }
-        });
-        mnuDatos.add(mnu_dtos_departamentos);
-
-        mnu_dtos_empresa.setText("Empresas");
-        mnu_dtos_empresa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnu_dtos_empresaActionPerformed(evt);
-            }
-        });
-        mnuDatos.add(mnu_dtos_empresa);
-
         mantMnuClientes.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mantMnuClientes.setText("Clientes");
         mantMnuClientes.addActionListener(new java.awt.event.ActionListener() {
@@ -330,22 +298,6 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         mnuDatos.add(mnuProductos);
-
-        mnuTipoProductos.setText("Familia de Productos");
-        mnuTipoProductos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuTipoProductosActionPerformed(evt);
-            }
-        });
-        mnuDatos.add(mnuTipoProductos);
-
-        mnuVendedores.setText("Vendedores");
-        mnuVendedores.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuVendedoresActionPerformed(evt);
-            }
-        });
-        mnuDatos.add(mnuVendedores);
 
         mnuSeguridad.setText("Usuario");
 
@@ -367,7 +319,7 @@ public class Principal extends javax.swing.JFrame {
 
         mnuDatos.add(mnuSeguridad);
 
-        mnu_datos_familiaProd.setText("Grupo de Productos");
+        mnu_datos_familiaProd.setText("Tipo de Productos");
         mnu_datos_familiaProd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnu_datos_familiaProdActionPerformed(evt);
@@ -431,12 +383,6 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mnuSalirActionPerformed
 
-    private void mantMnuClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantMnuClientesActionPerformed
-        FrmClientes cliente = new FrmClientes(em, escritorio, usuario);
-        escritorio.add(cliente);
-        cliente.show();
-    }//GEN-LAST:event_mantMnuClientesActionPerformed
-
     private void mnuIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuIniciarSesionActionPerformed
         login();
     }//GEN-LAST:event_mnuIniciarSesionActionPerformed
@@ -446,52 +392,6 @@ public class Principal extends javax.swing.JFrame {
             bloquearMenus();
         }
     }//GEN-LAST:event_mnuCerrarSesionActionPerformed
-
-    private void mnuUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUsuariosActionPerformed
-        if (usuario.getEsAdmin()) {
-            FrmUsuarios usu = new FrmUsuarios(em, usuario);
-            escritorio.add(usu);
-            usu.show();
-        } else {
-            JOptionPane.showMessageDialog(null, "Este usuario no tiene permitido el acceso a este módulo. ",
-                    "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_mnuUsuariosActionPerformed
-
-    private void mnuSeguridad_cambioContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSeguridad_cambioContrasenaActionPerformed
-        FrmCambioContrasena cambio = new FrmCambioContrasena(em, this.getUsuario());
-        escritorio.add(cambio);
-        cambio.show();
-    }//GEN-LAST:event_mnuSeguridad_cambioContrasenaActionPerformed
-
-    private void mnuTipoProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuTipoProductosActionPerformed
-        FrmTipoProductos tipPro = new FrmTipoProductos(em, usuario);
-        escritorio.add(tipPro);
-        tipPro.show();
-    }//GEN-LAST:event_mnuTipoProductosActionPerformed
-
-    private void mnuCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCajaActionPerformed
-        FrmCaja cc = new FrmCaja(em, escritorio, usuario);
-        escritorio.add(cc);
-        cc.show();
-    }//GEN-LAST:event_mnuCajaActionPerformed
-
-    private void mnuVendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuVendedoresActionPerformed
-        FrmVendedores ve = new FrmVendedores(em, usuario);
-        escritorio.add(ve);
-        ve.show();
-    }//GEN-LAST:event_mnuVendedoresActionPerformed
-
-    private void mnuProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuProductosActionPerformed
-        if (usuario.getEsAdmin()) {
-            FrmProductos prod = new FrmProductos(em, escritorio, usuario);
-            escritorio.add(prod);
-            prod.show();
-        } else {
-            JOptionPane.showMessageDialog(null, "Este usuario no tiene permitido el acceso a este módulo. ",
-                    "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_mnuProductosActionPerformed
 
     private void mnuVentasFacturacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuVentasFacturacionActionPerformed
         FrmVentas ve = new FrmVentas(em, usuario, logger);
@@ -540,10 +440,6 @@ public class Principal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_mnuVentasPorVendedorActionPerformed
 
-    private void mnuVentas_cobranzasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuVentas_cobranzasActionPerformed
- 
-    }//GEN-LAST:event_mnuVentas_cobranzasActionPerformed
-
     private void mnuEstadoCuentaClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEstadoCuentaClientesActionPerformed
        
     }//GEN-LAST:event_mnuEstadoCuentaClientesActionPerformed
@@ -572,21 +468,53 @@ public class Principal extends javax.swing.JFrame {
  
     }//GEN-LAST:event_mnuAjusteStockActionPerformed
 
-    private void mnu_dtos_empresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_dtos_empresaActionPerformed
-
-    }//GEN-LAST:event_mnu_dtos_empresaActionPerformed
-
-    private void mnu_dtos_departamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_dtos_departamentosActionPerformed
-   
-    }//GEN-LAST:event_mnu_dtos_departamentosActionPerformed
-
-    private void mnu_datos_familiaProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_datos_familiaProdActionPerformed
- 
-    }//GEN-LAST:event_mnu_datos_familiaProdActionPerformed
-
     private void mnu_ajuste_stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_ajuste_stockActionPerformed
  
     }//GEN-LAST:event_mnu_ajuste_stockActionPerformed
+
+    private void mnu_datos_familiaProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_datos_familiaProdActionPerformed
+
+    }//GEN-LAST:event_mnu_datos_familiaProdActionPerformed
+
+    private void mnuSeguridad_cambioContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSeguridad_cambioContrasenaActionPerformed
+        FrmCambioContrasena cambio = new FrmCambioContrasena(em, this.getUsuario());
+        escritorio.add(cambio);
+        cambio.show();
+    }//GEN-LAST:event_mnuSeguridad_cambioContrasenaActionPerformed
+
+    private void mnuUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUsuariosActionPerformed
+        if (usuario.getEsAdmin()) {
+            FrmUsuarios usu = new FrmUsuarios(em, usuario);
+            escritorio.add(usu);
+            usu.show();
+        } else {
+            JOptionPane.showMessageDialog(null, "Este usuario no tiene permitido el acceso a este módulo. ",
+                "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_mnuUsuariosActionPerformed
+
+    private void mnuProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuProductosActionPerformed
+        if (usuario.getEsAdmin()) {
+            FrmProductos prod = new FrmProductos(em, escritorio, usuario);
+            escritorio.add(prod);
+            prod.show();
+        } else {
+            JOptionPane.showMessageDialog(null, "Este usuario no tiene permitido el acceso a este módulo. ",
+                "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_mnuProductosActionPerformed
+
+    private void mantMnuClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantMnuClientesActionPerformed
+        FrmClientes cliente = new FrmClientes(em, escritorio, usuario);
+        escritorio.add(cliente);
+        cliente.show();
+    }//GEN-LAST:event_mantMnuClientesActionPerformed
+
+    private void mnuCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCajaActionPerformed
+        FrmCaja cc = new FrmCaja(em, escritorio, usuario);
+        escritorio.add(cc);
+        cc.show();
+    }//GEN-LAST:event_mnuCajaActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -743,20 +671,15 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu mnuSeguridad;
     private javax.swing.JMenuItem mnuSeguridad_cambioContrasena;
     private javax.swing.JMenu mnuSistema;
-    private javax.swing.JMenuItem mnuTipoProductos;
     private javax.swing.JMenuItem mnuUsuarios;
     private javax.swing.JMenuItem mnuValidaciones_facturasEmitidas;
-    private javax.swing.JMenuItem mnuVendedores;
     private javax.swing.JMenuItem mnuVenta_EmisionFacturaVenta;
     private javax.swing.JMenu mnuVentas;
     private javax.swing.JMenuItem mnuVentasFacturacion;
     private javax.swing.JMenuItem mnuVentasPorVendedor;
-    private javax.swing.JMenuItem mnuVentas_cobranzas;
     private javax.swing.JMenuItem mnu_acerca;
     private javax.swing.JMenuItem mnu_ajuste_stock;
     private javax.swing.JMenuItem mnu_configuracion;
     private javax.swing.JMenuItem mnu_datos_familiaProd;
-    private javax.swing.JMenuItem mnu_dtos_departamentos;
-    private javax.swing.JMenuItem mnu_dtos_empresa;
     // End of variables declaration//GEN-END:variables
 }

@@ -25,7 +25,6 @@ import py.com.ventu.controladores.ConfiguracionesJpaController;
 import py.com.ventu.controladores.FacturaVentaDetJpaController;
 import py.com.ventu.controladores.FacturaVentaJpaController;
 import py.com.ventu.controladores.ProductosJpaController;
-import py.com.ventu.controladores.SaPendientesJpaController;
 import py.com.ventu.controladores.VendedorJpaController;
 import py.com.ventu.entidades.Caja;
 import py.com.ventu.entidades.Cliente;
@@ -63,7 +62,7 @@ public class FrmVentas extends javax.swing.JInternalFrame {
     private ProductosJpaController productoService;
     //private ExistenciaSucursalJpaController existenciaService;
     private ConfiguracionesJpaController configuracionesService;
-    private SaPendientesJpaController saPendientesService;
+    //private SaPendientesJpaController saPendientesService;
     //private SucursalesJpaController sucursalService;
     
     //para mantener un log de registro
@@ -99,7 +98,7 @@ public class FrmVentas extends javax.swing.JInternalFrame {
         vendedoresService = new VendedorJpaController(em);
         clienteService = new ClientesJpaController(em);
         //existenciaService = new ExistenciaSucursalJpaController(em);
-        saPendientesService = new SaPendientesJpaController(em);
+       // saPendientesService = new SaPendientesJpaController(em);
        // sucursalService = new SucursalesJpaController(em);
         
         // config. del sistema
